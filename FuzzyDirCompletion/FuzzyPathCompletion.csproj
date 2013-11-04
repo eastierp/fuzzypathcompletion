@@ -98,6 +98,7 @@
     <Compile Include="FuzzyPathCmdlet.cs" />
     <Compile Include="FuzzyPathEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FuzzyPathTestCmdlet.cs" />
     <Compile Include="WeightedString.cs" />
   </ItemGroup>
   <ItemGroup>

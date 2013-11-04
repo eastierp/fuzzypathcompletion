@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Management.Automation;
+using FuzzyDirCompletion;
 
-namespace FuzzyDirCompletion
+namespace FuzzyPathCompletion
 {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// <summary>
@@ -28,7 +29,7 @@ namespace FuzzyDirCompletion
 		}
 		private string pathQuery;
 
-		[Parameter(Mandatory = false)]
+		[Parameter(Position = 1)]
 		public string StartPath
 		{
 			get { return startPath; }
@@ -46,9 +47,9 @@ namespace FuzzyDirCompletion
 		#endregion
 
 
-		protected override void EndProcessing()
+		protected override void ProcessRecord()
 		{
-			WriteObject(CallPathEvaluator(this.StartPath, this.pathQuery));
+			WriteObject(CallPathEvaluator(this.StartPath, this.PathQuery));
 		}
 
 		private string[] CallPathEvaluator(string startPath, string pathQuery)

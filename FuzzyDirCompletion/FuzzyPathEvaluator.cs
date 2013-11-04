@@ -44,26 +44,24 @@ namespace FuzzyDirCompletion
 			//Yeah it's dumb, optional parameters have to be a compile time constant anyway.
 			if (String.IsNullOrEmpty(startPath)) startPath = Environment.CurrentDirectory;
 
-			string[] startPathBits = startPath.Split(new[] { '\\', '/' });
-			string[] pathQueryBits = pathQuery.Split(new[] { '\\', '/' });
-
-			var absolutePaths = new[] { "~", "/", "\\" };
+			string[] startPathBits = startPath.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] pathQueryBits = pathQuery.Split(new[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
 
 			//TODO: Add \\MyFiles, and other absolute paths.
-			if (absolutePaths.Contains(pathQueryBits[0]))
+			if (Regex.IsMatch(pathQuery, @"^(\\|/|~)")) // ~, /, or \
 			{
-				switch (pathQueryBits[0])
+				switch (pathQuery[0])
 				{
-					case "~":
+					case '~':
 						startPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+						pathQueryBits = pathQueryBits.Skip(1).ToArray(); //Skip tilde element.
 						break;
 
-					case "/":
-					case "\\":
-						startPath = startPathBits[0];
+					case '/':
+					case '\\':
+						startPath = startPathBits[0]+'\\'; // Was removed by the string.split.
 						break;
 				}
-				pathQueryBits = pathQueryBits.Skip(1).ToArray();
 			}
 			else if (pathQuery.StartsWith("..")) // Up one/more directories.
 			{
@@ -112,7 +110,8 @@ namespace FuzzyDirCompletion
 
 			try
 			{
-				dirNames = GetSubdirectoryNames(startdir, "*" + frag[0] + "*");
+				var glob = "*" + String.Join("*", frag.ToCharArray()) + "*";
+				dirNames = GetSubdirectoryNames(startdir, glob);
 			}
 			catch (Exception) //No read access to that directory.
 			{
@@ -129,6 +128,10 @@ namespace FuzzyDirCompletion
 				{
 					paths.AddRange(DirFitnessRecurseR(Path.Combine(startdir, ws.Value), ws.Weight, 1, fragments));
 				}
+			}
+			else //Single level.
+			{
+				return testablePaths.Select(p => new WeightedString(p.Weight, Path.Combine(startdir, p.Value))).ToList();
 			}
 
 			return paths;
@@ -164,8 +167,8 @@ namespace FuzzyDirCompletion
 				try
 				{
 					//Add subdirectories and files at least matching a single character from this fragment.
-					filesAndDirNames.AddRange(Directory.GetFiles(dir, "*" + frag[0] + "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
-					filesAndDirNames.AddRange(GetSubdirectoryNames(currentDir, "*" + frag[0] + "*"));
+					filesAndDirNames.AddRange(Directory.GetFiles(dir, "*" + String.Join("*", frag.ToCharArray()) + "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+					filesAndDirNames.AddRange(GetSubdirectoryNames(currentDir, "*" + String.Join("*", frag.ToCharArray()) + "*"));
 				}
 				catch (Exception) //Could not read from the directory (usually permissions)
 				{
@@ -191,7 +194,7 @@ namespace FuzzyDirCompletion
 
 				try
 				{
-					dirStrings = Directory.GetDirectories(dir, "*" + frag[0] + "*", SearchOption.TopDirectoryOnly);
+					dirStrings = Directory.GetDirectories(dir, "*" + String.Join("*", frag.ToCharArray()) + "*", SearchOption.TopDirectoryOnly);
 				}
 				catch (Exception)
 				{
