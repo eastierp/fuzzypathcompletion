@@ -7,8 +7,8 @@
     <ProjectGuid>{65AC2DAA-4437-4B91-B6EE-A8CFC5079DB4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FuzzyDirCompletion</RootNamespace>
-    <AssemblyName>FuzzyDirCompletion</AssemblyName>
+    <RootNamespace>FuzzyPathCompletion</RootNamespace>
+    <AssemblyName>FuzzyPathCompletion</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
