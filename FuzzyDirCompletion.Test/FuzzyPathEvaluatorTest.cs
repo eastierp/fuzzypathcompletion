@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FuzzyDirCompletion.Test
+namespace FuzzyPathCompletion.Test
 {
 	[TestClass]
 	public class FuzzyPathEvaluatorTest

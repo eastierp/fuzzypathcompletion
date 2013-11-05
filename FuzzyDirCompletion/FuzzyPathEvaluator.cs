@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace FuzzyDirCompletion
+namespace FuzzyPathCompletion
 {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// <summary>	A class for evaluating paths lazily/fuzzily with query strings. </summary>

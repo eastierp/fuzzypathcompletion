@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Management.Automation;
-using FuzzyDirCompletion;
+using FuzzyPathCompletion;
 
 namespace FuzzyPathCompletion
 {
